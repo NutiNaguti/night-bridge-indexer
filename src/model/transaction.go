@@ -2,7 +2,6 @@ package model
 
 import (
 	"context"
-	"log"
 
 	"github.com/NutiNaguti/night-bridge-indexer/db"
 	"github.com/jackc/pgx/v5"
@@ -51,8 +50,7 @@ func GetTransactionsSince(ctx context.Context, timestamp string, pageToken uint1
 		return txsResponse, err
 	}
 
-	rows, _ := conn.Query(ctx, `select * from transactions where timestamp >= $1 order by timestamp limit $2 offset $3`, timestamp, pageSize, 0)
-	log.Print(rows)
+	rows, _ := conn.Query(ctx, `select * from transactions where timestamp >= $1 order by timestamp limit $2 offset $3`, timestamp, pageSize, pageSize*(pageToken-1))
 	conn.Close(ctx)
 
 	if err != nil {
