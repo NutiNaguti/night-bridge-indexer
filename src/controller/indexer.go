@@ -1,51 +1,38 @@
 package controller
 
 import (
-	"log"
+	"context"
 	"net/http"
+	"strconv"
 
 	"github.com/NutiNaguti/night-bridge-indexer/model"
 	"github.com/labstack/echo/v4"
-	"github.com/shopspring/decimal"
 )
 
 func GetLastTransaction(c echo.Context) error {
-	amount, err := decimal.NewFromString("1000000000000000000")
+	var tx *model.Transaction
+	tx, err := model.GetLastTransaction(context.Background())
 	if err != nil {
-		log.Fatal(err)
-	}
-	tx := &model.Transaction{
-		Id:        0,
-		From:      "nutinaguti.testnet",
-		To:        "0x8CAB5E96E1ab09e8678a8ffC75b5D818e73D4707",
-		Amount:    amount,
-		Timestamp: 1,
+		return err
 	}
 	return c.JSON(http.StatusOK, tx)
 }
 
 func GetTransactionsFromTo(c echo.Context) error {
-	amount, err := decimal.NewFromString("1000000000000000000")
+	var txs model.Transactions
+	var err error
+	timestamp := c.QueryParam("timestamp")
+	pageToken, err := strconv.ParseUint(c.QueryParam("page_token"), 10, 16)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	// from := c.Param("from")
-	// to := c.Param("to")
-	txs := []model.Transaction{
-		{
-			Id:        0,
-			From:      "nutinaguti.testnet",
-			To:        "0x8CAB5E96E1ab09e8678a8ffC75b5D818e73D4707",
-			Amount:    amount,
-			Timestamp: 1,
-		},
-		{
-			Id:        1,
-			From:      "nutinaguti.testnet",
-			To:        "0x8CAB5E96E1ab09e8678a8ffC75b5D818e73D4707",
-			Amount:    amount,
-			Timestamp: 2,
-		},
+	pageSize, err := strconv.ParseUint(c.QueryParam("page_size"), 10, 16)
+	if err != nil {
+		return err
+	}
+	txs, err = model.GetTransactionsSince(context.Background(), timestamp, uint16(pageToken), uint16(pageSize))
+	if err != nil {
+		return err
 	}
 	return c.JSON(http.StatusOK, txs)
 }
@@ -55,6 +42,9 @@ func AddTransaction(c echo.Context) error {
 	receiver := c.QueryParam("receiver")
 	amount := c.QueryParam("amount")
 	timestamp := c.QueryParam("timestamp")
-	log.Printf("%s, %s, %s, %s", sender, receiver, amount, timestamp)
+	err := model.CreateTransaction(context.Background(), sender, receiver, amount, timestamp)
+	if err != nil {
+		return err
+	}
 	return c.JSON(http.StatusOK, "")
 }

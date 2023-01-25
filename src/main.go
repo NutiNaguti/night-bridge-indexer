@@ -25,7 +25,7 @@ func main() {
 	// Routings
 	e.GET("/", controller.GetInfo)
 	e.GET("/tx", controller.GetLastTransaction)
-	e.GET("/tx/:from/:to", controller.GetTransactionsFromTo)
+	e.GET("/tx", controller.GetTransactionsFromTo)
 	e.PUT("/create", controller.AddTransaction)
 
 	// Set db connection string
