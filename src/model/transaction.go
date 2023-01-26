@@ -74,7 +74,7 @@ func CreateTransaction(ctx context.Context, sender string, receiver string, amou
 		return err
 	}
 
-	_, err = conn.Query(ctx, `insert into transactions (sender, receiver, amount, timestamp) values ($1, $2, $3, $4)`, sender, receiver, amount, timestamp)
+	_, err = conn.Exec(ctx, `insert into transactions (sender, receiver, amount, timestamp) values ($1, $2, $3, $4)`, sender, receiver, amount, timestamp)
 	conn.Close(ctx)
 
 	if err != nil {
