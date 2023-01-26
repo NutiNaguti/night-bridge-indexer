@@ -1,8 +1,15 @@
-#syntax=docker/dockerfile:1
+# Build stage
+FROM golang:1.19-alpine3.17 as build-env
 
-FROM golang:1.19-alpine3.17
-WORKDIR /app
-COPY ./src ./src
-RUN cd src && go mod tidy && go build -o indexer 
+ADD . /dockerdev
+WORKDIR /dockerdev
+RUN go build -o indexer 
+
+FROM alpine:latest 
+
+WORKDIR /
+COPY --from=build-env /dockerdev/indexer /
+
 EXPOSE 1234
-CMD ./src/indexer
+
+CMD ./indexer

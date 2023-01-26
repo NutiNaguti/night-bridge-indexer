@@ -2,20 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/NutiNaguti/night-bridge-indexer/common"
 	"github.com/NutiNaguti/night-bridge-indexer/controller"
 	"github.com/NutiNaguti/night-bridge-indexer/db"
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
-
-func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file")
-	}
-}
 
 func main() {
 	// Load configs
