@@ -41,7 +41,7 @@ func main() {
 	e.GET("v1/tx/last", handler.GetLastTransaction)
 	e.GET("v1/tx", handler.GetTransactionsFromTo)
 	// Admin functions
-	e.PUT("v1/create", handler.AddTransaction)
+	e.PUT("v1/tx/add", handler.AddTransaction)
 
 	// Set db connection string
 	db.SetupConnectionString(conf.Db.ConnectionString)
