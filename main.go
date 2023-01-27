@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	"github.com/NutiNaguti/night-bridge-indexer/common"
-	"github.com/NutiNaguti/night-bridge-indexer/controller"
 	"github.com/NutiNaguti/night-bridge-indexer/db"
+	"github.com/NutiNaguti/night-bridge-indexer/handler"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -17,13 +18,15 @@ func main() {
 
 	// Middleware
 	e.Pre(apiVersion)
+	// e.Use(middleware.BasicAuth())
+	// e.Use(middleware.CORS())
 
 	// Routings version 1.0
-	e.GET("v1/", controller.GetInfo)
-	e.GET("v1/tx/last", controller.GetLastTransaction)
-	e.GET("v1/tx", controller.GetTransactionsFromTo)
+	e.GET("/", handler.GetInfo)
+	e.GET("v1/tx/last", handler.GetLastTransaction)
+	e.GET("v1/tx", handler.GetTransactionsFromTo)
 	// Admin functions
-	e.PUT("v1/create", controller.AddTransaction)
+	e.PUT("v1/create", handler.AddTransaction)
 
 	// Set db connection string
 	db.SetupConnectionString(conf.Db.ConnectionString)

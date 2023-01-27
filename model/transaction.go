@@ -8,7 +8,9 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-type Transactions struct {
+const maxPageSize uint16 = 100
+
+type TransactionsPage struct {
 	Txs           []Transaction
 	NextPageToken uint16
 }
@@ -37,13 +39,13 @@ func GetLastTransaction(ctx context.Context) (*Transaction, error) {
 	return &tx, err
 }
 
-func GetTransactionsSince(ctx context.Context, timestamp string, pageToken uint16, pageSize uint16) (Transactions, error) {
-	if pageSize > 100 {
-		pageSize = 100
+func GetTransactionsSince(ctx context.Context, timestamp string, pageToken uint16, pageSize uint16) (TransactionsPage, error) {
+	if pageSize > maxPageSize {
+		pageSize = maxPageSize
 	}
 
 	var txs []Transaction
-	var txsResponse Transactions
+	var txsResponse TransactionsPage
 
 	conn, err := db.CreateConnection()
 	if err != nil {
