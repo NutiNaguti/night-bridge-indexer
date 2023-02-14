@@ -8,8 +8,6 @@ import (
 
 	"github.com/NutiNaguti/night-bridge-indexer/model"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
-	"golang.org/x/text/cases"
 )
 
 var defaultTimeDuration = time.Second * 10

@@ -2,7 +2,6 @@ package model
 
 import (
 	"context"
-	"time"
 
 	"github.com/NutiNaguti/night-bridge-indexer/db"
 	"github.com/jackc/pgx/v5"
